@@ -3,4 +3,5 @@ pyrotgfork==2.2.16
 python-dotenv<=0.21.0
 tgcrypto<=1.2.3
 pycryptodome==3.18.0
+asyncio
 requests
