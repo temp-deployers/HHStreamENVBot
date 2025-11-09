@@ -134,6 +134,12 @@ async def initialize_clients():
 
             # Upload session file to GitHub
             await upload_to_github(session_file, session_file)
+            
+            # Register channel handlers for additional bots if channel tracking is enabled
+            if Var.ENABLE_CHANNEL_TRACKING:
+                from ..bot.plugins.stream import register_channel_handler
+                register_channel_handler(client)
+                print(f"Registered channel handler for Client {client_id}")
 
             return client_id, client
         except Exception:
