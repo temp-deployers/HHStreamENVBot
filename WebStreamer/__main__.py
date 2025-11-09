@@ -148,6 +148,33 @@ async def start_services():
         print("---------------------- Initializing Clients ----------------------")
         await initialize_clients()
         print("------------------------------ DONE ------------------------------")
+        
+        # Pre-cache BIN_CHANNEL peer to avoid "Peer id invalid" errors
+        if Var.BIN_CHANNEL:
+            print("------------------ Pre-caching BIN_CHANNEL Peer ------------------")
+            try:
+                from pyrogram import raw
+                # Fetch dialogs to ensure all accessible chats are cached
+                await StreamBot.invoke(raw.functions.messages.GetDialogs(
+                    offset_date=0,
+                    offset_id=0,
+                    offset_peer=raw.types.InputPeerEmpty(),
+                    limit=200,
+                    hash=0
+                ))
+                logging.info(f"Successfully pre-cached dialogs including BIN_CHANNEL")
+                
+                # Also try to explicitly get the BIN_CHANNEL chat
+                try:
+                    chat = await StreamBot.get_chat(Var.BIN_CHANNEL)
+                    logging.info(f"Successfully cached BIN_CHANNEL: {chat.title if hasattr(chat, 'title') else Var.BIN_CHANNEL}")
+                except Exception as e:
+                    logging.warning(f"Could not explicitly cache BIN_CHANNEL chat: {e}")
+                    
+                print("------------------------------ DONE ------------------------------")
+            except Exception as e:
+                logging.error(f"Failed to pre-cache BIN_CHANNEL: {e}")
+                print("--------------------------- FAILED ------------------------------")
         if Var.ON_HEROKU:
             print("------------------ Starting Keep Alive Service ------------------")
             print()

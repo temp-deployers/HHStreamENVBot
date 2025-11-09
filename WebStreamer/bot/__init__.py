@@ -5,7 +5,11 @@ from ..vars import Var
 from pyrogram import Client, utils
 from os import getcwd
 
-utils.MIN_CHANNEL_ID = -1002947483647
+# Updated MIN_CHANNEL_ID to support newer/larger channel IDs
+# Old value: -1002947483647
+# New value supports channel IDs like -1003260273478
+utils.MIN_CHANNEL_ID = -1007852516352
+utils.MIN_CHAT_ID = -999999999999
 
 StreamBot = Client(
     name="WebStreamer",  # This will create a session file named "WebStreamer.session"
